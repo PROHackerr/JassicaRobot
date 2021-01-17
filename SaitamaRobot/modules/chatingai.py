@@ -17,52 +17,6 @@ import SaitamaRobot.modules.helper_funcs.string_store as fun
 
 
 
-
-@run_async
-@typing_action
-def slap(update, context):
-    args = context.args
-    msg = update.effective_message
-
-    # reply to correct message
-    reply_text = (
-        msg.reply_to_message.reply_text if msg.reply_to_message else msg.reply_text
-    )
-
-    # get user who sent message
-    if msg.from_user.username:
-        curr_user = "@" + escape_markdown(msg.from_user.username)
-    else:
-        curr_user = "[{}](tg://user?id={})".format(
-            msg.from_user.first_name, msg.from_user.id)
-        
-
-    user_id = extract_user(update.effective_message, args)
-    if user_id:
-        slapped_user = context.bot.get_chat(user_id)
-        user1 = curr_user
-        if slapped_user.username:
-            user2 = "@" + escape_markdown(slapped_user.username)
-        else:
-            user2 = "[{}](tg://user?id={})".format(
-                slapped_user.first_name, slapped_user.id
-            )
-
-    # if no target found, bot targets the sender
-    else:
-        user1 = "[{}](tg://user?id={})".format(context.bot.first_name, context.bot.id)
-        user2 = curr_user
-
-    temp = random.choice(fun.SLAP_TEMPLATES)
-    item = random.choice(fun.ITEMS)
-    hit = random.choice(fun.HIT)
-    throw = random.choice(fun.THROW)
-
-    repl = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
-
-    reply_text(repl, parse_mode=ParseMode.MARKDOWN)
-
-
 @run_async
 @typing_action
 def hug(update, context):
@@ -153,19 +107,7 @@ def goodmorning(update, context):
     reply = random.choice(fun.GDMORNING)
     message.reply_text(reply, parse_mode=ParseMode.MARKDOWN)
 
-__help__ = """
-*Some dank memes for fun or whatever!
- ✪ `/slap`: Slap a user, or get slapped if not a reply.
- ✪ `/hug`: Hug a user warmly, or get hugged if not a reply.
- ✪ `/roll`: Rolls a dice.
- ✪ `/clap`: Claps on someones message!
- 
-"""
 
-__mod_name__ = "LOL Memes"
-
-
-SLAP_HANDLER = DisableAbleCommandHandler("slap", slap)
 HUG_HANDLER = DisableAbleCommandHandler("hug", hug)
 DICE_HANDLER = DisableAbleCommandHandler("roll", dice)
 CLAP_HANDLER = DisableAbleCommandHandler("clap", clapmoji)
@@ -176,7 +118,6 @@ GDNIGHT_HANDLER = DisableAbleMessageHandler(
     Filters.regex(r"(?i)(gn|good night)"), goodnight, friendly="goodnight"
 )
 
-dispatcher.add_handler(SLAP_HANDLER)
 dispatcher.add_handler(HUG_HANDLER)
 dispatcher.add_handler(DICE_HANDLER)
 dispatcher.add_handler(CLAP_HANDLER)
